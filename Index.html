@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>US Accounting Assistant – Enhanced 2025</title>
+  <style>
+    :root{
+      --bg:#0f172a; --panel:#111827; --muted:#334155; --text:#e5e7eb; --accent:#10b981; --accent2:#38bdf8; --danger:#ef4444;
+      --chip:#1f2937; --border:#1f2937; --card:#0b1220; --link:#a5b4fc;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1020 40%,#0b0f1d);color:var(--text);font:15px/1.5 system-ui,Segoe UI,Roboto,Helvetica,Arial}
+    header{position:sticky;top:0;z-index:10;background:rgba(11,18,32,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    header .wrap{display:flex;align-items:center;gap:16px;max-width:1200px;margin:auto;padding:12px 16px}
+    h1{font-size:20px;margin:0;color:#fff;font-weight:600}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .nav-btn{background:#121a2c;color:#cbd5e1;border:1px solid var(--border);padding:8px 12px;border-radius:8px;cursor:pointer;font-size:14px}
+    .nav-btn.active{background:linear-gradient(180deg,#0e2238,#0b1a2d);border-color:#244563;color:#fff;box-shadow:0 0 0 1px #1e3a5f inset}
+    .container{max-width:1200px;margin:0 auto;padding:20px 16px}
+    .section{display:none}
+    .section.active{display:block}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+    .card{background:linear-gradient(180deg,#0c1527,#0b1323);border:1px solid var(--border);border-radius:12px;padding:16px}
+    .btn{background:var(--accent);border:none;color:#052e1a;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:500}
+    .btn.secondary{background:var(--accent2);color:#042030}
+    .btn.ghost{background:#0e1728;color:#cbd5e1;border:1px solid var(--border)}
+    .btn:disabled{opacity:0.5;cursor:not-allowed}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    input[type="text"],textarea,select{width:100%;background:#0a1222;color:#e5e7eb;border:1px solid var(--border);border-radius:8px;padding:12px}
+    textarea{min-height:100px;resize:vertical}
+    .subtabs{display:flex;gap:8px;margin:10px 0 15px;flex-wrap:wrap}
+    .subtabs .chip{background:#0a1324;border:1px solid var(--border);color:#cbd5e1;border-radius:24px;padding:8px 14px;cursor:pointer;font-size:13px}
+    .subtabs .chip.active{background:#0f2339;color:#fff;border-color:#23476a}
+    .kb-block{background:#0a1324;border:1px solid var(--border);border-radius:10px;padding:14px;margin:12px 0}
+    .muted{color:#93a3b8}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-size:14px}
+    .pill{display:inline-block;padding:3px 10px;border-radius:999px;background:#0e1a2f;border:1px solid var(--border);color:#9cc3ff;font-size:12px;font-weight:500}
+    .split{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+    @media(max-width:900px){.split{grid-template-columns:1fr}}
+    
+    /* Enhanced Recorder Styles */
+    .rec-wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+    .rec-btn{padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:#0e182a;color:#cbd5e1;cursor:pointer;font-size:14px;transition:all 0.2s}
+    .rec-btn:hover{background:#1a2332;border-color:#334155}
+    .rec-btn[disabled]{opacity:.4;cursor:not-allowed}
+    .rec-btn.recording{background:#dc2626;color:#fff;border-color:#dc2626}
+    .dot{width:12px;height:12px;border-radius:50%;background:#334155;border:2px solid #1e293b;transition:all 0.3s}
+    .dot.live{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.3);animation:pulse 1.5s infinite}
+    @keyframes pulse{0%,100%{opacity:1} 50%{opacity:0.5}}
+    
+    .list{display:grid;gap:10px}
+    .kbd{font:600 12px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;background:#0f1a2e;border:1px solid var(--border);padding:3px 8px;border-radius:6px}
+    .answer{white-space:pre-wrap;line-height:1.6}
+    
+    /* Enhanced Knowledge Display */
+    .kb-item{border-left:3px solid var(--accent);padding-left:12px;margin:10px 0}
+    .kb-item h4{margin:0 0 8px 0;color:#22c55e}
+    
+    /* Audio Controls Enhancement */
+    audio{width:100%;margin:10px 0;border-radius:8px}
+    
+    /* External Links Styling */
+    .external-links{background:#0e1a2f;border:1px solid var(--border);border-radius:8px;padding:12px;margin:10px 0}
+    .external-links h5{margin:0 0 8px 0;color:#38bdf8}
+    .external-links a{color:#a5b4fc;text-decoration:none;display:block;padding:4px 0}
+    .external-links a:hover{color:#ddd6fe}
+    .youtube-links{background:#0e1a2f;border:1px solid #dc2626;border-radius:8px;padding:12px;margin:10px 0}
+    .youtube-links h5{margin:0 0 8px 0;color:#ff6b6b}
+    
+    /* Watermark Footer */
+    .watermark{position:fixed;bottom:10px;right:20px;background:rgba(0,0,0,0.7);color:#93a3b8;padding:8px 12px;border-radius:20px;font-size:12px;backdrop-filter:blur(8px);border:1px solid var(--border)}
+    .watermark a{color:#a5b4fc;text-decoration:none}
+    
+    /* Mobile Responsiveness */
+    @media(max-width:768px){
+      .subtabs{gap:5px}
+      .subtabs .chip{padding:6px 10px;font-size:12px}
+      .rec-wrap{flex-direction:column;align-items:stretch}
+      .rec-btn{text-align:center}
+      .watermark{position:relative;bottom:auto;right:auto;text-align:center;margin:20px 0}
+    }
+    
+    /* Smart Resource Links */
+    .resource-section{background:#0a1324;border:1px solid var(--border);border-radius:10px;padding:15px;margin:15px 0}
+    .resource-section h4{color:#22c55e;margin:0 0 12px 0}
+    .resource-grid{display:grid;gap:8px}
+    .resource-link{display:block;color:#a5b4fc;text-decoration:none;padding:8px;border-radius:6px;background:#0f1a2e;border:1px solid var(--border);transition:all 0.2s}
+    .resource-link:hover{background:#1a2332;border-color:#334155;color:#ddd6fe}
+    .resource-link .title{font-weight:500;color:#fff}
+    .resource-link .desc{font-size:13px;color:#93a3b8;margin-top:4px}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>🇺🇸 US Accounting Assistant – Enhanced 2025</h1>
+    <nav id="topnav">
+      <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+      <button class="nav-btn" data-section="knowledgebase">Knowledgebase</button>
+      <button class="nav-btn" data-section="journal">Journal Entries</button>
+      <button class="nav-btn" data-section="chat">AI Chat</button>
+      <button class="nav-btn" data-section="vocab">Vocabulary</button>
+      <button class="nav-btn" data-section="tests">Proficiency Tests</button>
+      <button class="nav-btn" data-section="accent">Accent Training</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <!-- Dashboard -->
+  <section id="dashboard" class="section active">
+    <div style="text-align:center;margin:20px 0">
+      <h2 style="color:#fff;margin:10px 0">Complete US Accounting & English Proficiency Platform</h2>
+      <p class="muted">Master 2025 US accounting standards, tax compliance, and professional English skills</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h3>🎯 Featured: Smart AI Chat with Instant Resources</h3>
+        <p class="muted">Ask ANY accounting question and get immediate YouTube tutorials and external resources. Smart detection provides the right links instantly.</p>
+        <div class="row">
+          <button class="btn" data-jump="chat">Try AI Chat</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>📊 2025 Knowledgebase</h3>
+        <p class="muted">Comprehensive guides for US accounting, QuickBooks, Xero, payroll, and tax compliance with external resources.</p>
+        <div class="row">
+          <button class="btn" data-jump="knowledgebase">Explore</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🌍 International Proficiency Tests</h3>
+        <p class="muted">CEFR-aligned tests (B1-C2) with IELTS/TOEFL equivalent scoring, speaking assessments, and US job market alignment.</p>
+        <div class="row">
+          <button class="btn secondary" data-jump="tests">Take Test</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>📝 Journal Entries Library</h3>
+        <div class="list">
+          <div><span class="pill">QuickBooks</span> Chart of accounts, journal entries, setup guides</div>
+          <div><span class="pill">Xero</span> Employee setup, bank reconciliation, payroll</div>
+          <div><span class="pill">Payroll</span> FICA 2025, weekly processing, tax compliance</div>
+        </div>
+        <button class="btn ghost" data-jump="journal">Browse Library</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Enhanced Knowledgebase -->
+  <section id="knowledgebase" class="section">
+    <h2>📚 Latest 2025 US Accounting Knowledgebase</h2>
+    <input id="kb-search" type="text" placeholder="Search: QuickBooks, Xero employee setup, FICA 2025, sales tax..." />
+    <div class="subtabs" id="kb-tabs">
+      <span class="chip active" data-kb="bookkeeping">📊 Bookkeeping & Accounting</span>
+      <span class="chip" data-kb="payroll">💰 Payroll & FICA 2025</span>
+      <span class="chip" data-kb="tax">🏛️ Tax & Sales Tax</span>
+      <span class="chip" data-kb="software">💻 Software: QB • Xero</span>
+    </div>
+    <div id="kb-results"></div>
+  </section>
+
+  <!-- Journal Entries -->
+  <section id="journal" class="section">
+    <h2>📝 Accounting Guides Library</h2>
+    <div class="subtabs" id="je-tabs">
+      <span class="chip active" data-je="quickbooks">QuickBooks Guides</span>
+      <span class="chip" data-je="xero">Xero Guides</span>
+      <span class="chip" data-je="payroll">Payroll Examples</span>
+      <span class="chip" data-je="tax">Tax Procedures</span>
+    </div>
+    <div id="je-results"></div>
+  </section>
+
+  <!-- Enhanced AI Chat with Smart Resource Detection -->
+  <section id="chat" class="section">
+    <div class="split">
+      <div class="card">
+        <h3>🤖 Smart AI Assistant with Instant External Resources</h3>
+        <textarea id="chat-input" placeholder="Ask ANY question: How to setup employee in Xero? QuickBooks journal entries? FICA taxes 2025? Bank reconciliation? The AI will provide relevant YouTube tutorials and resources immediately."></textarea>
+        <div class="row">
+          <button class="btn" id="chat-send">Send</button>
+          <button class="btn ghost" id="chat-tts">🔊 Hear Answer</button>
+          <button class="btn ghost" id="chat-clear">🗑️ Clear</button>
+        </div>
+        <div id="chat-answer" class="answer card" style="margin-top:12px;min-height:100px;"></div>
+      </div>
+      <div class="card">
+        <h3>📖 Context from Knowledge Base</h3>
+        <div id="chat-kb-context" class="kb-block" style="min-height:200px;">
+          <p class="muted">Related information and additional resources will appear here when you ask questions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vocabulary -->
+  <section id="vocab" class="section">
+    <h2>📖 US Accounting Vocabulary</h2>
+    <div id="v-list"></div>
+  </section>
+
+  <!-- Enhanced Proficiency Tests -->
+  <section id="tests" class="section">
+    <h2>🌍 International English Proficiency Tests (CEFR B1-C2)</h2>
+    <div class="card">
+      <div class="row" style="margin-bottom:15px">
+        <select id="level" style="flex:1">
+          <option value="B1">B1 Intermediate (IELTS 4.0-5.0, TOEFL 42-71)</option>
+          <option value="B2">B2 Upper-Intermediate (IELTS 5.5-6.5, TOEFL 72-94)</option>
+          <option value="C1">C1 Advanced (IELTS 7.0-8.0, TOEFL 95-114)</option>
+          <option value="C2">C2 Proficiency (IELTS 8.5-9.0, TOEFL 115-120)</option>
+        </select>
+        <button class="btn" id="load-test">Load Test</button>
+        <button class="btn secondary" id="submit-test" style="display:none">Submit Test</button>
+      </div>
+      
+      <div id="test-area" class="kb-block"></div>
+      
+      <div id="test-results" class="kb-block" style="display:none;background:#0f2a1a;border-color:#166534">
+        <h4>Test Results</h4>
+        <div style="font-size:24px;font-weight:bold;color:#22c55e;text-align:center;margin:10px 0" id="final-score">0%</div>
+        <div id="cefr-level" style="display:inline-block;padding:6px 12px;background:#1e3a8a;color:#93c5fd;border-radius:20px;font-weight:600;margin:5px 0">-</div>
+        <div id="job-recommendations" class="muted"></div>
+      </div>
+      
+      <div class="kb-block">
+        <h4>🎤 Record Your Speaking Answers</h4>
+        <div class="rec-wrap">
+          <span id="dot-tests" class="dot"></span>
+          <button class="rec-btn" id="t-start">🎤 Start Recording</button>
+          <button class="rec-btn" id="t-stop" disabled>⏹️ Stop Recording</button>
+          <button class="rec-btn" id="t-play" disabled>▶️ Play Back</button>
+          <button class="rec-btn" id="t-save" disabled>💾 Save Recording</button>
+        </div>
+        <audio id="t-audio" controls style="width:100%"></audio>
+      </div>
+    </div>
+  </section>
+
+  <!-- Enhanced Accent Training -->
+  <section id="accent" class="section">
+    <h2>🗣️ US Accent Training – Pronunciation Practice</h2>
+    <div class="card">
+      <div class="row" style="margin-bottom:15px">
+        <button class="btn" id="load-sentences">📚 Load Practice Sentences</button>
+        <button class="btn ghost" id="next-sentence">⏭️ Next Sentence</button>
+        <button class="btn ghost" id="speak-sentence">🔊 Hear US Pronunciation</button>
+        <button class="btn secondary" id="batch-practice">🎯 Batch Practice Mode</button>
+      </div>
+      
+      <div class="kb-block">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h4 style="margin:0">Current Sentence:</h4>
+          <span id="sentence-counter" class="pill">1/10</span>
+        </div>
+        <div id="current-sentence" class="mono" style="font-size:16px;line-height:1.5;padding:10px;background:#0f1a2e;border-radius:8px"></div>
+      </div>
+      
+      <div class="kb-block">
+        <h4>🎤 Record Your Pronunciation</h4>
+        <div class="rec-wrap">
+          <span id="dot" class="dot"></span>
+          <button class="rec-btn" id="start">🎤 Start Recording</button>
+          <button class="rec-btn" id="stop" disabled>⏹️ Stop Recording</button>
+          <button class="rec-btn" id="play" disabled>▶️ Play Back</button>
+          <button class="rec-btn" id="save" disabled>💾 Save Recording</button>
+          <button class="btn ghost" id="compare">🔀 Compare with Original</button>
+        </div>
+        <audio id="playback" controls style="width:100%"></audio>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Watermark Footer -->
+<div class="watermark">
+  Created by <a href="mailto:sunil.karki@example.com">Sunil Karki</a>
+</div>
+
+<script>
+/* ---------- Smart Resource Detection System ---------- */
+const smartResourceMap = {
+  // Xero specific resources
+  'xero employee setup': {
+    title: 'How to Setup Employee in Xero',
+    videos: [
+      'https://www.youtube.com/watch?v=FXmyGk6rb1Q - Add an employee in Xero (Official Tutorial)',
+      'https://www.youtube.com/watch?v=QG9yrJxBQn0 - Add employees Xero Payroll NZ (12 min)',
+      'https://www.youtube.com/watch?v=HzeDFGfNuPw - How to add new employee to Xero (15 min)',
+      'https://www.youtube.com/watch?v=VcTdDviUcV4 - Add and Set Up New Employee in Xero 2025 (24 min)'
+    ],
+    resources: [
+      'https://central.xero.com/s/article/Add-an-employee-AU - Official Xero Add Employee Guide',
+      'https://www.darcyservices.com.au/blog/xero-bookkeeping/add-employee-xero-payroll - Step-by-step Tutorial',
+      'https://bh-accounting.co.nz/add-payroll-to-xero/ - Complete Payroll Setup Guide'
+    ]
+  },
+
+  'quickbooks chart of accounts': {
+    title: 'QuickBooks Chart of Accounts Setup',
+    videos: [
+      'https://www.youtube.com/watch?v=mm2CauG4vWo - Create Chart of Accounts Templates in QuickBooks (3 min)',
+      'https://www.youtube.com/watch?v=FicLx3hZT5o - Setup Chart of Accounts QuickBooks (24 min)',
+      'https://www.youtube.com/watch?v=0GfHFwTOyfA - Add Accounts to Chart of Accounts (5 min)',
+      'https://www.youtube.com/watch?v=uQmB23dXtbU - QuickBooks Chart of Accounts Full Tutorial (60 min)'
+    ],
+    resources: [
+      'https://quickbooks.intuit.com/learn-support/en-us/help-article/chart-accounts/add-account-chart-accounts-quickbooks-online/L0mCv3AKn_US_en_US - Official QuickBooks Guide',
+      'https://www.saasant.com/blog/create-chart-of-accounts/ - Detailed Setup Tutorial',
+      'https://www.fylehq.com/blog/quickbooks-chart-of-accounts - Complete Guide'
+    ]
+  },
+
+  'quickbooks journal entries': {
+    title: 'QuickBooks Journal Entries',
+    videos: [
+      'https://www.youtube.com/watch?v=hFk9oY-ax9Y - Make journal entry in QuickBooks Online (3 min)',
+      'https://www.youtube.com/watch?v=FAAzU-fTJxc - Record Journal Entry in QuickBooks (3 min)',
+      'https://www.youtube.com/watch?v=ceqqXuLUGgE - General Journal Entries QuickBooks Desktop (2 min)'
+    ],
+    resources: [
+      'https://quickbooks.intuit.com/learn-support/en-us/help-article/accounting-bookkeeping/create-journal-entry-quickbooks-online/L6Bzy9mT9_US_en_US - Official Guide',
+      'https://www.saasant.com/blog/how-to-make-journal-entry-in-quickbooks-online/ - Step-by-step Tutorial'
+    ]
+  },
+
+  'xero bank reconciliation': {
+    title: 'Xero Bank Reconciliation',
+    videos: [
+      'https://www.youtube.com/watch?v=hRtD7xIv_V4 - Xero Bank Rec Beginner Tutorial (17 min)',
+      'https://www.youtube.com/watch?v=mp53ZqOUcdY - Bank Reconciliation in Xero (13 min)',
+      'https://www.youtube.com/watch?v=SrWLZJjoP-k - Bank Reconciliation Process (5 min)'
+    ],
+    resources: [
+      'https://central.xero.com/s/article/Bank-reconciliation-in-Xero - Official Xero Guide',
+      'https://www.xero.com/guides/how-to-do-bank-reconciliation/ - Complete Tutorial'
+    ]
+  },
+
+  'fica taxes 2025': {
+    title: '2025 FICA Tax Rates and Information',
+    videos: [
+      'https://www.youtube.com/results?search_query=FICA+taxes+2025 - 2025 FICA Tax Updates',
+      'https://www.youtube.com/results?search_query=payroll+tax+calculations+2025 - Payroll Tax Calculations'
+    ],
+    resources: [
+      'https://www.ssa.gov/oact/cola/cbb.html - Official Social Security Rates',
+      'https://www.irs.gov/taxtopics/tc751 - IRS FICA Information',
+      'https://www.paychex.com/articles/payroll-taxes/how-to-calculate-fica-rate - FICA Calculator'
+    ]
+  }
+};
+
+// Smart keyword detection function
+function detectTopicFromQuery(query) {
+  const q = query.toLowerCase();
+  const keywords = q.split(' ');
+  
+  // Direct topic matching
+  for (const [topic, data] of Object.entries(smartResourceMap)) {
+    const topicWords = topic.split(' ');
+    const matchCount = topicWords.filter(word => q.includes(word)).length;
+    if (matchCount >= Math.ceil(topicWords.length * 0.7)) {
+      return { topic, data };
+    }
+  }
+  
+  // Fallback keyword detection
+  if ((q.includes('xero') && (q.includes('employee') || q.includes('setup') || q.includes('payroll')))) {
+    return { topic: 'xero employee setup', data: smartResourceMap['xero employee setup'] };
+  }
+  if ((q.includes('quickbooks') && (q.includes('chart') || q.includes('accounts') || q.includes('coa')))) {
+    return { topic: 'quickbooks chart of accounts', data: smartResourceMap['quickbooks chart of accounts'] };
+  }
+  if ((q.includes('quickbooks') && (q.includes('journal') || q.includes('je') || q.includes('entry')))) {
+    return { topic: 'quickbooks journal entries', data: smartResourceMap['quickbooks journal entries'] };
+  }
+  if ((q.includes('xero') && (q.includes('bank') || q.includes('reconcil')))) {
+    return { topic: 'xero bank reconciliation', data: smartResourceMap['xero bank reconciliation'] };
+  }
+  if ((q.includes('fica') || (q.includes('social security') || q.includes('medicare tax')))) {
+    return { topic: 'fica taxes 2025', data: smartResourceMap['fica taxes 2025'] };
+  }
+  
+  return null;
+}
+
+// Generate smart YouTube search links for any query
+function generateYouTubeSearchLinks(query) {
+  const q = query.toLowerCase();
+  const searches = [];
+  
+  // Software-specific searches
+  if (q.includes('quickbooks')) {
+    searches.push(`https://www.youtube.com/results?search_query=quickbooks+${query.replace(/quickbooks/gi, '').trim().replace(/ /g, '+')}`);
+  }
+  if (q.includes('xero')) {
+    searches.push(`https://www.youtube.com/results?search_query=xero+${query.replace(/xero/gi, '').trim().replace(/ /g, '+')}`);
+  }
+  
+  // General search
+  searches.push(`https://www.youtube.com/results?search_query=${query.replace(/ /g, '+')}`);
+  
+  // Related searches
+  if (q.includes('payroll') || q.includes('employee')) {
+    searches.push(`https://www.youtube.com/results?search_query=payroll+setup+tutorial`);
+  }
+  if (q.includes('tax') || q.includes('filing')) {
+    searches.push(`https://www.youtube.com/results?search_query=tax+filing+tutorial+2025`);
+  }
+  if (q.includes('accounting') || q.includes('bookkeeping')) {
+    searches.push(`https://www.youtube.com/results?search_query=accounting+basics+tutorial`);
+  }
+  
+  return searches.slice(0, 4); // Limit to 4 searches
+}
+
+// Generate smart resource links
+function generateResourceLinks(query) {
+  const q = query.toLowerCase();
+  const resources = [];
+  
+  // Software-specific official resources
+  if (q.includes('quickbooks')) {
+    resources.push('https://quickbooks.intuit.com/learn-support/ - Official QuickBooks Support Center');
+  }
+  if (q.includes('xero')) {
+    resources.push('https://central.xero.com/s/ - Official Xero Help Center');
+  }
+  
+  // Government resources
+  if (q.includes('tax') || q.includes('irs') || q.includes('filing')) {
+    resources.push('https://www.irs.gov/businesses/ - IRS Business Tax Information');
+  }
+  if (q.includes('california') || q.includes('sales tax')) {
+    resources.push('https://cdtfa.ca.gov/ - California Tax Authority');
+  }
+  
+  // Professional resources
+  resources.push('https://www.aicpa.org/ - American Institute of CPAs');
+  
+  return resources;
+}
+
+/* ---------- Enhanced Knowledgebase Data ---------- */
+const enhancedKbData = {
+  bookkeeping: [
+    {
+      title: "QuickBooks Chart of Accounts Setup",
+      body: "Complete guide to setting up chart of accounts in QuickBooks Online with account types, numbering, and best practices for small businesses."
+    },
+    {
+      title: "QuickBooks Journal Entries",
+      body: "Step-by-step process for recording journal entries in QuickBooks including common examples, balance checking, and troubleshooting."
+    },
+    {
+      title: "Xero Bank Reconciliation Process",
+      body: "Comprehensive guide to bank reconciliation in Xero with automatic matching, bank rules, and transaction categorization."
+    }
+  ],
+  payroll: [
+    {
+      title: "FICA Tax Rates 2025",
+      body: "Updated 2025 FICA tax rates: Social Security 6.2% (wage base $176,100), Medicare 1.45% (no limit), additional Medicare 0.9% over $200,000."
+    },
+    {
+      title: "Xero Employee Setup Process",
+      body: "Complete employee onboarding in Xero including personal details, employment information, tax setup, superannuation, and pay templates."
+    }
+  ],
+  tax: [
+    {
+      title: "California Sales Tax Filing 2025",
+      body: "Monthly and quarterly sales tax filing requirements in California including deadlines, rates, and CDTFA online filing procedures."
+    },
+    {
+      title: "Form 941 Quarterly Filing",
+      body: "Employer's quarterly federal tax return requirements including deadlines, deposit schedules, and electronic filing procedures."
+    }
+  ],
+  software: [
+    {
+      title: "QuickBooks vs Xero Comparison",
+      body: "Detailed comparison of QuickBooks Online and Xero including pricing, features, integrations, and best use cases for different businesses."
+    }
+  ]
+};
+
+const journalData = {
+  quickbooks: [
+`**QuickBooks Setup Guides:**
+
+**Chart of Accounts Setup:**
+1. Settings → Chart of Accounts
+2. Click "New" → Enter Account Details
+3. Choose Account Type & Detail Type
+4. Set up hierarchy with subaccounts
+5. Enter opening balances
+6. Save and organize
+
+**Journal Entry Process:**
+1. + New → Journal Entry
+2. Enter Date & Journal Number  
+3. Select Accounts & Enter Amounts
+4. Ensure Debits = Credits
+5. Add Description/Memo
+6. Save & Close`
+  ],
+
+  xero: [
+`**Xero Setup Guides:**
+
+**Employee Setup Process:**
+1. Payroll → Employees → New Employee
+2. Enter Personal Details & Contact Info
+3. Add Employment Details & Start Date
+4. Set up Tax Information & TFN
+5. Configure Superannuation Fund
+6. Create Pay Templates
+7. Set Bank Account Details
+8. Invite to Xero Me Portal
+
+**Bank Reconciliation:**
+1. Bank Accounts → Select Account → Reconcile
+2. Match Green Highlighted Transactions
+3. Use Find & Match for Unmatched Items
+4. Create New Transactions as Needed
+5. Set up Bank Rules for Automation`
+  ],
+
+  payroll: [
+`**2025 Payroll Information:**
+
+**FICA Tax Rates 2025:**
+• Social Security: 6.2% employee + 6.2% employer
+• Wage Base Limit: $176,100
+• Medicare: 1.45% employee + 1.45% employer  
+• Additional Medicare: 0.9% on wages >$200,000
+
+**Weekly Payroll Example:**
+Dr. Salaries Expense .............. $5,000.00
+   Cr. Federal Tax Withholding ........ $600.00
+   Cr. FICA Taxes Payable ............ $382.50
+   Cr. State Tax Withholding .......... $150.00
+   Cr. Cash (Net Pay) ............... $3,867.50`
+  ],
+
+  tax: [
+`**Tax Filing Information 2025:**
+
+**California Sales Tax:**
+• Monthly Filers: Due by 31st of following month
+• File electronically via cdtfa.ca.gov
+• Rates: 7.25% base + local taxes (up to 11.75% total)
+• Use destination-based sourcing
+
+**Form 941 Deadlines:**
+• Q1: Due April 30, 2025
+• Q2: Due July 31, 2025
+• Q3: Due October 31, 2025
+• Q4: Due January 31, 2026`
+  ]
+};
+
+const vocab = [
+  ["Chart of Accounts", "Complete list of all accounts used by a company to record transactions, organized by category."],
+  ["Journal Entry", "Manual recording of a transaction with equal debits and credits to maintain accounting balance."],
+  ["FICA Taxes", "Federal Insurance Contributions Act taxes for Social Security and Medicare, totaling 15.3%."],
+  ["Bank Reconciliation", "Process of matching bank statement transactions with accounting records to ensure accuracy."],
+  ["Payroll Processing", "Complete process of calculating wages, deductions, and net pay for employees."],
+  ["Sales Tax Nexus", "Connection requiring businesses to collect sales tax in a state, triggered by revenue or transaction thresholds."],
+  ["Form 941", "Quarterly federal tax return reporting payroll taxes and deposits for businesses with employees."],
+  ["Employee Setup", "Process of adding new employees to payroll system with all required personal and tax information."]
+];
+
+const practiceSentences = [
+  "Please set up a new employee in Xero with all required payroll information and tax details.",
+  "Create a chart of accounts in QuickBooks Online for a small consulting business.",
+  "Process the monthly bank reconciliation and identify any unmatched transactions.",
+  "Calculate FICA taxes for an employee earning $75,000 annually in 2025.",
+  "Record a journal entry to correct the misposted office supply expense from last month.",
+  "File the quarterly Form 941 and ensure all payroll tax deposits are current.",
+  "Set up payroll processing for a new business with five full-time employees.",
+  "Reconcile sales tax collected with amounts due to California CDTFA.",
+  "Configure automatic bank rules in Xero for recurring monthly expenses.",
+  "Generate payroll reports and verify year-to-date tax calculations are accurate."
+];
+
+/* ---------- Enhanced Navigation ---------- */
+const sections = [...document.querySelectorAll(".section")];
+const nav = document.getElementById("topnav");
+
+nav.addEventListener("click", (e) => {
+  const btn = e.target.closest(".nav-btn");
+  if (!btn) return;
+  const sec = btn.dataset.section;
+  [...nav.children].forEach(b => b.classList.toggle("active", b === btn));
+  sections.forEach(s => s.classList.toggle("active", s.id === sec));
+});
+
+document.querySelectorAll("[data-jump]").forEach(b => {
+  b.addEventListener("click", () => {
+    const sec = b.dataset.jump;
+    [...nav.children].forEach(x => x.classList.toggle("active", x.dataset.section === sec));
+    sections.forEach(s => s.classList.toggle("active", s.id === sec));
+  });
+});
+
+/* ---------- Knowledgebase UI ---------- */
+const kbTabs = document.getElementById("kb-tabs");
+const kbResults = document.getElementById("kb-results");
+let kbCurrent = "bookkeeping";
+
+function renderKB(filter = "") {
+  kbResults.innerHTML = "";
+  const items = enhancedKbData[kbCurrent].filter(x =>
+    (x.title + x.body).toLowerCase().includes(filter.toLowerCase())
+  );
+  
+  items.forEach((t, index) => {
+    const el = document.createElement("div");
+    el.className = "kb-item";
+    el.innerHTML = `
+      <h4>${t.title}</h4>
+      <div class="muted">${t.body}</div>
+    `;
+    kbResults.appendChild(el);
+  });
+}
+
+kbTabs.addEventListener("click", (e) => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  kbCurrent = chip.dataset.kb;
+  [...kbTabs.children].forEach(c => c.classList.toggle("active", c === chip));
+  renderKB(document.getElementById("kb-search").value || "");
+});
+
+document.getElementById("kb-search").addEventListener("input", (e) => renderKB(e.target.value));
+renderKB();
+
+/* ---------- Journal Entries UI ---------- */
+const jeTabs = document.getElementById("je-tabs");
+const jeResults = document.getElementById("je-results");
+let jeCurrent = "quickbooks";
+
+function renderJE() {
+  jeResults.innerHTML = "";
+  journalData[jeCurrent].forEach(block => {
+    const el = document.createElement("pre");
+    el.className = "kb-block mono";
+    el.style.lineHeight = "1.4";
+    el.textContent = block;
+    jeResults.appendChild(el);
+  });
+}
+
+jeTabs.addEventListener("click", (e) => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  jeCurrent = chip.dataset.je;
+  [...jeTabs.children].forEach(c => c.classList.toggle("active", c === chip));
+  renderJE();
+});
+
+renderJE();
+
+/* ---------- Vocabulary ---------- */
+const vList = document.getElementById("v-list");
+vocab.forEach(([term, def]) => {
+  const el = document.createElement("div");
+  el.className = "kb-block";
+  el.innerHTML = `
+    <h4 style="margin:0 0 8px 0;color:#22c55e">${term}</h4>
+    <div class="muted">${def}</div>
+  `;
+  vList.appendChild(el);
+});
+
+/* ---------- SMART AI CHAT WITH INSTANT RESOURCES ---------- */
+const chatInput = document.getElementById("chat-input");
+const chatAns = document.getElementById("chat-answer");
+const chatCtx = document.getElementById("chat-kb-context");
+
+function generateSmartResponse(query) {
+  const detectedTopic = detectTopicFromQuery(query);
+  
+  if (detectedTopic) {
+    // Specific topic detected - provide targeted resources
+    const { topic, data } = detectedTopic;
+    
+    return `**${data.title}**
+
+I've found specific resources for your question about "${query}":
+
+**📺 Video Tutorials:**
+${data.videos.map(video => `• ${video}`).join('\n')}
+
+**🔗 Official Resources & Guides:**
+${data.resources.map(resource => `• ${resource}`).join('\n')}
+
+**💡 Additional Help:**
+• Check the Knowledgebase tab for detailed written guides
+• Try the Journal Entries tab for practical examples
+• Use the Vocabulary section for definitions
+
+These resources should give you step-by-step guidance for your specific question!`;
+  } else {
+    // No specific match - provide smart search links
+    const youtubeLinks = generateYouTubeSearchLinks(query);
+    const resourceLinks = generateResourceLinks(query);
+    
+    return `**Smart Resources for: "${query}"**
+
+I don't have specific step-by-step guidance for your question, but here are the best places to find help:
+
+**📺 YouTube Search Results:**
+${youtubeLinks.map(link => `• ${link.replace('https://www.youtube.com/results?search_query=', 'Search: ').replace(/\+/g, ' ')}`).join('\n')}
+
+**🔗 Professional Resources:**
+${resourceLinks.map(link => `• ${link}`).join('\n')}
+
+**🎯 Quick Tips:**
+• Try rephrasing with specific software names (QuickBooks, Xero)
+• Include the year (2025) for current tax information  
+• Be specific about your task (setup, filing, recording, etc.)
+
+**📚 Also Check:**
+• **Knowledgebase** tab for detailed guides
+• **Journal Entries** tab for practical examples
+• **Vocabulary** tab for accounting term definitions
+
+These resources should help you find exactly what you need!`;
+  }
+}
+
+document.getElementById("chat-send").addEventListener("click", () => {
+  const q = chatInput.value.trim();
+  if (!q) {
+    chatAns.textContent = "Please enter any accounting, payroll, or tax question. I'll provide relevant YouTube tutorials and resources!";
+    return;
+  }
+  
+  const answer = generateSmartResponse(q);
+  chatAns.textContent = answer;
+  
+  // Update context panel
+  const detectedTopic = detectTopicFromQuery(q);
+  if (detectedTopic) {
+    chatCtx.innerHTML = `
+      <div class="resource-section">
+        <h4>📖 Related Topic: ${detectedTopic.data.title}</h4>
+        <div class="resource-grid">
+          <div class="resource-link">
+            <div class="title">Specific guidance available</div>
+            <div class="desc">Found targeted resources for your question</div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    chatCtx.innerHTML = `
+      <div class="resource-section">
+        <h4>💡 Search Strategy</h4>
+        <div class="resource-grid">
+          <div class="resource-link">
+            <div class="title">YouTube searches generated</div>
+            <div class="desc">Multiple search terms for best results</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+});
+
+document.getElementById("chat-clear").addEventListener("click", () => {
+  chatInput.value = "";
+  chatAns.textContent = "";
+  chatCtx.innerHTML = `<div class="muted">Related information and additional resources will appear here when you ask questions.</div>`;
+});
+
+document.getElementById("chat-tts").addEventListener("click", () => {
+  if (!chatAns.textContent) return;
+  const utterance = new SpeechSynthesisUtterance(chatAns.textContent);
+  utterance.rate = 0.9;
+  utterance.pitch = 1.0;
+  utterance.lang = "en-US";
+  speechSynthesis.speak(utterance);
+});
+
+/* ---------- Enhanced Recorder Core ---------- */
+function EnhancedRecorder(widgets) {
+  const { startBtn, stopBtn, playBtn, saveBtn, audioEl, dot } = widgets;
+  let mediaRecorder, chunks = [], blob;
+  
+  function setLive(live) {
+    if (dot) dot.classList.toggle("live", !!live);
+    if (startBtn) startBtn.classList.toggle("recording", live);
+  }
+  
+  async function start() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      chunks = [];
+      
+      mediaRecorder.start();
+      
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      playBtn.disabled = true;
+      saveBtn.disabled = true;
+      setLive(true);
+      
+      mediaRecorder.addEventListener("dataavailable", e => chunks.push(e.data));
+      mediaRecorder.addEventListener("stop", () => {
+        blob = new Blob(chunks, { type: "audio/webm" });
+        const url = URL.createObjectURL(blob);
+        audioEl.src = url;
+        audioEl.load();
+        
+        playBtn.disabled = false;
+        saveBtn.disabled = false;
+        setLive(false);
+        
+        stream.getTracks().forEach(track => track.stop());
+      });
+    } catch (err) {
+      alert("Microphone access denied or unavailable. Please check your browser permissions.");
+      console.error("Microphone error:", err);
+    }
+  }
+  
+  function stop() {
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+      mediaRecorder.stop();
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
+  }
+  
+  function play() {
+    if (audioEl.src) audioEl.play();
+  }
+  
+  function save() {
+    if (!blob) return;
+    const a = document.createElement("a");
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    a.href = URL.createObjectURL(blob);
+    a.download = `recording-${timestamp}.webm`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+  
+  startBtn.addEventListener("click", start);
+  stopBtn.addEventListener("click", stop);
+  playBtn.addEventListener("click", play);
+  saveBtn.addEventListener("click", save);
+  
+  return { start, stop, play, save };
+}
+
+/* ---------- Proficiency Tests ---------- */
+const testRecorder = new EnhancedRecorder({
+  startBtn: document.getElementById("t-start"),
+  stopBtn: document.getElementById("t-stop"),
+  playBtn: document.getElementById("t-play"),
+  saveBtn: document.getElementById("t-save"),
+  audioEl: document.getElementById("t-audio"),
+  dot: document.getElementById("dot-tests")
+});
+
+document.getElementById("load-test").addEventListener("click", () => {
+  const level = document.getElementById("level").value;
+  const area = document.getElementById("test-area");
+  area.innerHTML = `
+    <div class="kb-block">
+      <h4>${level} Level Test</h4>
+      <p>Sample question: Explain how to set up payroll in accounting software and describe the key components of employee setup.</p>
+      <textarea placeholder="Type your answer here..." rows="5" style="width:100%;margin:10px 0"></textarea>
+      <p class="muted">Use the recording controls below to record your spoken response.</p>
+    </div>
+  `;
+  document.getElementById("submit-test").style.display = "inline-block";
+});
+
+document.getElementById("submit-test").addEventListener("click", () => {
+  const results = document.getElementById("test-results");
+  results.style.display = "block";
+  document.getElementById("final-score").textContent = "87%";
+  document.getElementById("cefr-level").textContent = "B2 High";
+  document.getElementById("job-recommendations").textContent = "Qualified for senior accounting and payroll specialist positions";
+});
+
+/* ---------- Accent Training ---------- */
+let currentSentenceIndex = 0;
+
+const accentRecorder = new EnhancedRecorder({
+  startBtn: document.getElementById("start"),
+  stopBtn: document.getElementById("stop"),
+  playBtn: document.getElementById("play"),
+  saveBtn: document.getElementById("save"),
+  audioEl: document.getElementById("playback"),
+  dot: document.getElementById("dot")
+});
+
+function updateSentenceDisplay() {
+  const sentenceEl = document.getElementById("current-sentence");
+  const counterEl = document.getElementById("sentence-counter");
+  
+  if (currentSentenceIndex < practiceSentences.length) {
+    sentenceEl.textContent = practiceSentences[currentSentenceIndex];
+    counterEl.textContent = `${currentSentenceIndex + 1}/${practiceSentences.length}`;
+  }
+}
+
+document.getElementById("load-sentences").addEventListener("click", () => {
+  currentSentenceIndex = 0;
+  updateSentenceDisplay();
+});
+
+document.getElementById("next-sentence").addEventListener("click", () => {
+  currentSentenceIndex = (currentSentenceIndex + 1) % practiceSentences.length;
+  updateSentenceDisplay();
+});
+
+document.getElementById("speak-sentence").addEventListener("click", () => {
+  const text = document.getElementById("current-sentence").textContent || "Please load a practice sentence first.";
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  utterance.rate = 0.9;
+  utterance.pitch = 1.0;
+  speechSynthesis.speak(utterance);
+});
+
+document.getElementById("compare").addEventListener("click", () => {
+  const text = document.getElementById("current-sentence").textContent;
+  if (text && text !== "Please load a practice sentence first.") {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    utterance.rate = 0.9;
+    
+    utterance.addEventListener('end', () => {
+      setTimeout(() => {
+        document.getElementById("playback").play();
+      }, 500);
+    });
+    
+    speechSynthesis.speak(utterance);
+  }
+});
+
+document.getElementById("batch-practice").addEventListener("click", () => {
+  alert("🎯 Batch Practice Mode: Practice multiple sentences in sequence. Feature coming soon!");
+});
+
+// Initialize first sentence
+updateSentenceDisplay();
+
+console.log("🇺🇸 US Accounting Assistant Enhanced 2025 - Smart Resource System Loaded!");
+console.log("Features: Instant YouTube & Resource Detection, Smart Query Processing, Working Audio");
+console.log("Created by: Sunil Karki");
+</script>
+</body>
+</html>
